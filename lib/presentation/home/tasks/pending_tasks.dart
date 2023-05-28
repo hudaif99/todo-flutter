@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_app_with_provider/presentation/home/pending_tasks/pending_task_provider.dart';
+import 'package:to_do_app_with_provider/presentation/home/tasks/task_provider.dart';
 import 'package:to_do_app_with_provider/widgets/task_card.dart';
 import 'package:to_do_app_with_provider/presentation/task_detailed_page/task_detailed.dart';
 import 'package:to_do_app_with_provider/utils/font_constants.dart';
@@ -10,9 +10,9 @@ class PendingTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PendingTaskProvider>(
-      builder:((context, pendingTaskProviderModel, child) {
-        final pendingTasks = pendingTaskProviderModel.pendingTasks;
+    return Consumer<TaskProvider>(
+      builder:((context, taskProviderModel, child) {
+        final pendingTasks = taskProviderModel.pendingTasks;
 
         return pendingTasks.isEmpty ?
           const Center(child: Text('You have no pending tasks'),) :
@@ -25,13 +25,13 @@ class PendingTasks extends StatelessWidget {
           final item = pendingTasks[index];
 
           return Dismissible(
-              key: Key(item.toString()),
+              key: UniqueKey(),
               onDismissed: (direction){
                 if (direction == DismissDirection.endToStart){
-                  pendingTaskProviderModel.taskDeleted(index);
+                  taskProviderModel.taskDeleted(index, pendingTasks);
                 }
                 else{
-                  pendingTaskProviderModel.taskCompleted(index);
+                  taskProviderModel.taskCompleted(index);
                 }
               },
               secondaryBackground: Container(

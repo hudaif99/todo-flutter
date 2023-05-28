@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_app_with_provider/presentation/home/tasks/task_provider.dart';
+import 'package:to_do_app_with_provider/presentation/task_detailed_page/task_detailed.dart';
 import 'package:to_do_app_with_provider/widgets/task_card.dart';
 import '../../../utils/font_constants.dart';
-import 'completed_task_provider.dart';
 
 class CompletedTasks extends StatelessWidget {
   const CompletedTasks({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompletedTaskProvider>(
-        builder: ((context, completedTaskProviderModel, child) {
-          final completedTasks = completedTaskProviderModel.completedTasks;
+    return Consumer<TaskProvider>(
+        builder: ((context, taskProviderModel, child) {
+          final completedTasks = taskProviderModel.completedTasks;
 
             return completedTasks.isEmpty ?
             const Center(child: Text('You have not completed any tasks yet')) :
@@ -25,9 +26,12 @@ class CompletedTasks extends StatelessWidget {
                 final item = completedTasks[index];
 
                 return Dismissible(
-                    key: Key(item.toString()),
-                    onDismissed: (direction) {},
-                    secondaryBackground: Container(
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      taskProviderModel.taskDeleted(index, completedTasks);
+                    },
+                    background: Container(
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.all(35),
                       decoration: BoxDecoration(
@@ -37,17 +41,11 @@ class CompletedTasks extends StatelessWidget {
                       child: const Icon(
                         Icons.delete, size: 20, color: Colors.white,),
                     ),
-                    background: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.all(35),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: const Color(0xFF2E8B57)
-                      ),
-                      child: const Icon(
-                        Icons.check, size: 20, color: Colors.white,),
-                    ),
-                    child: _taskCard(item)
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailedPage(task: item)));
+                      },
+                      child: _taskCard(item))
                 );
               },
             );}));
@@ -56,6 +54,7 @@ class CompletedTasks extends StatelessWidget {
   Widget _taskCard(item) {
     return CommonCard(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [

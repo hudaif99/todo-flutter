@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_app_with_provider/models/modal_task.dart';
-import 'package:to_do_app_with_provider/presentation/home/completed_tasks/completed_tasks.dart';
-import 'package:to_do_app_with_provider/presentation/home/pending_tasks/pending_task_provider.dart';
-import 'package:to_do_app_with_provider/presentation/home/pending_tasks/pending_tasks.dart';
-import 'package:to_do_app_with_provider/widgets/task_card.dart';
+import 'package:to_do_app_with_provider/presentation/home/tasks/completed_tasks.dart';
+import 'package:to_do_app_with_provider/presentation/home/tasks/task_provider.dart';
+import 'package:to_do_app_with_provider/presentation/home/tasks/pending_tasks.dart';
 import 'package:to_do_app_with_provider/widgets/text_field.dart';
-import 'completed_tasks/completed_task_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,14 +17,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late TabController _tabController;
   final TextEditingController _titleEditingController = TextEditingController();
   final TextEditingController _descriptionEditingController = TextEditingController();
-  final PendingTaskProvider _pendingTaskProvider = PendingTaskProvider();
-  // late CompletedTaskProvider _completedTaskProvider;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    // _completedTaskProvider = CompletedTaskProvider();
   }
 
   @override
@@ -35,8 +29,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _tabController.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,17 +83,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Expanded(
             child: TabBarView(
           controller: _tabController,
-          children: [
-            // Consumer<PendingTaskProvider>(
-            //     builder: (context, pendingTaskProviderModel, child) {
-            //       return PendingTasks();
-            //       },
-            // ),
-            const PendingTasks(),
-            ChangeNotifierProvider.value(
-              value: CompletedTaskProvider(),
-                child: const CompletedTasks()
-            )
+          children: const [
+             PendingTasks(),
+             CompletedTasks()
           ],
         ))
       ],
@@ -153,12 +137,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     Expanded(
                         child: ElevatedButton(
                             onPressed: (){
-                              // _pendingTaskProvider.pendingTasks.add(Task(_titleEditingController.text, _descriptionEditingController.text));
-                              _pendingTaskProvider.addNewTask(_titleEditingController.text, _descriptionEditingController.text, context);
-                              // print(_pendingTaskProvider.pendingTasks);
-                              setState(() {
-
-                              });
+                              context.read<TaskProvider>().addNewTask(_titleEditingController.text, _descriptionEditingController.text, context);
+                              _titleEditingController.clear();
+                              _descriptionEditingController.clear();
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
