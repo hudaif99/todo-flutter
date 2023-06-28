@@ -43,7 +43,8 @@ class CompletedTasks extends StatelessWidget {
                     ),
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TaskDetailedPage(task: item)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            TaskDetailedPage(task: item, status: 'completed', taskId: item.id)));
                       },
                       child: _taskCard(item))
                 );
@@ -52,27 +53,20 @@ class CompletedTasks extends StatelessWidget {
   }
 
   Widget _taskCard(item) {
-    return CommonCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                  child: Text(item.title, style: FontConstants.primary15B,)
-              ),
-              InkWell(
-                  onTap: () {},
-                  child: const Icon(Icons.edit, size: 18,)
-              )
-            ],
-          ),
-          const SizedBox(height: 10,),
-          Text(item.description,
-            style: FontConstants.primary14,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,)
-        ],
+    return SizedBox(
+      width: double.infinity,
+      child: CommonCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(item.title, style: FontConstants.primary15B,),
+            const SizedBox(height: 10,),
+            Text(item.description,
+              style: FontConstants.primary14,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,)
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/modal_task.dart';
 
 class TaskProvider extends ChangeNotifier {
+  late int latestTaskId;
 
   List<ModalTask> pendingTasks = [];
 
@@ -18,7 +19,9 @@ class TaskProvider extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Title cannot be empty')));
     } else{
-      pendingTasks.add(ModalTask(title: title, description: description));
+      int taskId = DateTime.now().millisecondsSinceEpoch;
+      latestTaskId = taskId;
+      pendingTasks.add(ModalTask(title: title, description: description, id: latestTaskId));
       }
     notifyListeners();
   }

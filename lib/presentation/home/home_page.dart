@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_app_with_provider/presentation/home/tasks/completed_tasks.dart';
 import 'package:to_do_app_with_provider/presentation/home/tasks/task_provider.dart';
@@ -22,6 +21,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -30,65 +32,61 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-      statusBarColor: Colors.white
-    ));
-    return SafeArea(
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          floatingActionButton: _fab(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          body: _body(),
-        ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        floatingActionButton: _tabController.index == 0 ? _fab() : null,
+        body: _body(),
       ),
     );
   }
 
   Widget _body() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: SizedBox(
-            height: 45,
-            child: SearchBar(
-              elevation: MaterialStateProperty.all(1.0),
-              backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.secondary),
-              hintText: 'Search for tasks',
-              leading: const Icon(Icons.search),
-              padding: MaterialStateProperty.all(const EdgeInsets.only(left: 20)),
+    return SafeArea(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+              height: 45,
+              child: SearchBar(
+                elevation: MaterialStateProperty.all(1.0),
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.secondary),
+                hintText: 'Search for tasks',
+                leading: const Icon(Icons.search),
+                padding: MaterialStateProperty.all(const EdgeInsets.only(left: 20)),
+              ),
             ),
           ),
-        ),
-        TabBar(
-          indicatorColor: Theme.of(context).tabBarTheme.indicatorColor,
-          labelColor: Theme.of(context).textTheme.titleMedium!.color,
-          // dividerColor:  Theme.of(context).textTheme.titleMedium!.color,
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              child: Text('Pending tasks'),
-            ),
-            Tab(
-              child: Text('Completed tasks'),
-            )
-          ],
-        ),
-        Expanded(
-            child: TabBarView(
-          controller: _tabController,
-          children: const [
-             PendingTasks(),
-             CompletedTasks()
-          ],
-        ))
-      ],
+          TabBar(
+            indicatorColor: Theme.of(context).tabBarTheme.indicatorColor,
+            labelColor: Theme.of(context).textTheme.titleMedium!.color,
+            // dividerColor:  Theme.of(context).textTheme.titleMedium!.color,
+            controller: _tabController,
+            tabs: const [
+              Tab(
+                child: Text('Pending tasks'),
+              ),
+              Tab(
+                child: Text('Completed tasks'),
+              )
+            ],
+          ),
+          Expanded(
+              child: TabBarView(
+            controller: _tabController,
+            children: const [
+               PendingTasks(),
+               CompletedTasks()
+            ],
+          ))
+        ],
+      ),
     );
   }
 

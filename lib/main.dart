@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_app_with_provider/presentation/home/tasks/task_provider.dart';
+import 'package:to_do_app_with_provider/presentation/task_detailed_page/task_detailed_provider.dart';
 import 'package:to_do_app_with_provider/theme/dark_theme.dart';
 import 'package:to_do_app_with_provider/theme/light_theme.dart';
 import 'presentation/home/home_page.dart';
@@ -10,12 +11,15 @@ void main(){
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-        // statusBarBrightness: Brightness.light,
-        // statusBarIconBrightness: Brightness.dark
+        statusBarBrightness: Brightness.light,
       ));
-  runApp(ChangeNotifierProvider(
-    create: (context) => TaskProvider(),
-    child: const MyApp())
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => TaskProvider()),
+          ChangeNotifierProvider(create: (context) => TaskDetailedProvider())
+        ],
+        child: const MyApp())
   );
 }
 

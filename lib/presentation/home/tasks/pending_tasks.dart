@@ -57,6 +57,8 @@ class PendingTasks extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) => TaskDetailedPage(
                         task: item,
+                        taskId: item.id,
+                        status: 'pending',
                       )));
                 },
                   child: _taskCard(item))
@@ -83,7 +85,7 @@ class PendingTasks extends StatelessWidget {
           ),
           const SizedBox(height: 10,),
           Text(item.description,
-            style: FontConstants.primary14, maxLines: 2, overflow: TextOverflow.ellipsis,)
+            style: FontConstants.primary14, maxLines: 2, overflow: TextOverflow.ellipsis)
         ],
       ),
     );

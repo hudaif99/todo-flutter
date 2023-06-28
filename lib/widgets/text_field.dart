@@ -31,7 +31,8 @@ class CommonTextfield extends StatelessWidget {
           controller: controller,
           maxLines: maxLines ?? 1,
           decoration: InputDecoration(
-            filled: true,isDense: true,
+            filled: true,
+            isDense: true,
             fillColor: Theme.of(context).buttonTheme.colorScheme!.primary,
             hintText: hintText,
             hintStyle: const TextStyle(
